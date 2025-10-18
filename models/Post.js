@@ -10,7 +10,6 @@ const postSchema = new mongoose.Schema({
     title:      {   type: String, 
                     required: true },
     
-    
     topic:      {   type: [String],     
                     required: true,
                     enum: ['Politics', 'Health', 'Sport', 'Tech'],
@@ -55,8 +54,13 @@ const postSchema = new mongoose.Schema({
                                     required: true,
                                     maxlength: [400, 'Comment cannot exceed 400 characters']                                
                                 }     
-    }]
-});
+    }],
+    
+},
+{
+    collection: 'Posts',
+    timestamps: true
+  });
 
 // Virtuals are Mongoose properties not stored in the database.they are computed on-the-fly and define how data is presented.
 postSchema.virtual('status').get(function() {
@@ -81,7 +85,6 @@ postSchema.virtual('timeLeft').get(function() {
     return ms > 0 ? ms : 0;
 });
 
-
 postSchema.virtual('timeLeftFormatted').get(function() {
     const ms = this.timeLeft;
     if (ms <= 0) return 'Expired';
@@ -99,4 +102,4 @@ postSchema.set('toJSON', { virtuals: true });
 postSchema.set('toObject', { virtuals: true });
 
 
-module.exports = mongoose.model('Post', postSchema);
+module.exports = mongoose.model('Post', postSchema , 'Posts' );
