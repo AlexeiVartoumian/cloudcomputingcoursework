@@ -19,24 +19,6 @@ router.get("/", async(req , res) => {
     }
 })
 
-// router.post("/" , async(req, res) => {
-//     // console.log("this executed" )
-//     // console.log(req.body.email)
-//     const postData = new User( {
-//         name: req.body.name,
-//         email: req.body.email,
-//         password: req.body.password,
-//         date: Date.now()
-//     })
-//     try{
-//         const postToSave = await postData.save()
-//         res.send(postToSave)
-//     }catch(err){
-//         thing = console.log(req.body.name)
-//         res.send({message:err, thing})
-//     }
-// })
-
 router.post("/" , async(req, res) => {
    
     try{
