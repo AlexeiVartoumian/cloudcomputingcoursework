@@ -6,35 +6,26 @@ const User = require("../models/User")
 
 
 const UserService = require("../service/UserService")
+const { authenticateJWT } = require('../middleware/auth');
 
 
-router.get("/", async(req , res) => {
+router.get("/", authenticateJWT, async(req , res) => {
     
     try{
         const getFilms = await User.find().limit(10)
-        console.log(getFilms)
-        res.send(getFilms)
-    }catch(err){
-        res.send( {message:err + "oops" })
-    }
-})
-
-router.post("/" , async(req, res) => {
-   
-    try{
-        payload = { name : req.body.name, email : req.body.email, password: req.body.password}
-
-        const userToSave = await UserService.createUser(payload)
         
-         res.status(201).json({ 
+        res.status(200).json({ 
             success: true, 
-            userToSave 
+            users 
         });
     }catch(err){
-        thing = console.log(req.body.name)
-        res.send({message:err, thing})
+        res.status(400).json({ 
+            success: false, 
+            error: error.message 
+        });
     }
 })
+
 
 
 
