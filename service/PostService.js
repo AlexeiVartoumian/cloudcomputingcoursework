@@ -43,6 +43,13 @@ class PostService {
      async likePost(postId, userId) {
 
         const post = await Post.findById(postId)
+        if (!post) {
+            throw new Error('Post not found');
+        }
+
+        if (post.status == "expired"){
+            throw new Error('Cannot interact with expired post');
+        } 
 
         //https://www.w3schools.com/jsref/jsref_filter.asp use predicate to filter existing id 
         post.dislikes = post.dislikes.filter(id => !id.equals(userId));
@@ -59,6 +66,13 @@ class PostService {
     async dislikePost(postId, userId) {
 
         const post = await Post.findById(postId)
+        if (!post) {
+            throw new Error('Post not found');
+        }
+
+        if (post.status == "expired"){
+            throw new Error('Cannot interact with expired post');
+        } 
 
         //https://www.w3schools.com/jsref/jsref_filter.asp use predicate to filter existing id 
         post.likes = post.likes.filter(id => !id.equals(userId));
