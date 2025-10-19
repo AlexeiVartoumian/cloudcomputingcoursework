@@ -24,7 +24,7 @@ router.get("/test", async(req , res) => {
 
 //https://expressjs.com/en/guide/error-handling.html
 
-router.post("/post" , authenticateJWT, async(req, res) => {
+router.post("/" , authenticateJWT, async(req, res) => {
     
     try{
         payload = { title : req.body.title, topic : req.body.topic, body : req.body.message, expirationMinutes : 60 }
@@ -44,10 +44,16 @@ router.post("/post" , authenticateJWT, async(req, res) => {
 router.patch("/:id/like" , authenticateJWT,async(req, res) => {
 
     try {
-        const like = await PostService.likePost(req.params.id , req.body.user_id)
+        const post = await PostService.likePost(req.params.id , req.body.user_id)
         res.status(200).json({
             success:true,
-            like
+            post: {
+                id: post._id,
+                likesCount: post.likesCount,
+                dislikesCount: post.dislikesCount,
+                status: post.status,
+                timeLeft: post.timeLeftFormatted
+            }
         })
     } catch(error){
         res.status(400).json({
@@ -59,10 +65,16 @@ router.patch("/:id/like" , authenticateJWT,async(req, res) => {
 router.patch("/:id/dislike" , authenticateJWT,async(req, res) => {
 
     try {
-        const like = await PostService.dislikePost(req.params.id , req.body.user_id)
+        const post = await PostService.dislikePost(req.params.id , req.body.user_id)
         res.status(200).json({
             success:true,
-            like
+            post: {
+                id: post._id,
+                likesCount: post.likesCount,
+                dislikesCount: post.dislikesCount,
+                status: post.status,
+                timeLeft: post.timeLeftFormatted
+            }
         })
     } catch(error){
         res.status(400).json({
@@ -76,14 +88,19 @@ router.patch("/:id/addcomment" , authenticateJWT,async(req, res) => {
     
     try {   
         
-        const comment = await PostService.addComment(req.params.id , req.body.user_id , req.body.message)
+        const post = await PostService.addComment(req.params.id , req.body.user_id , req.body.message)
         
         
         res.status(200).json({
             success:true,
-            comment
+            post: {
+                id: post._id,
+                commentsCount: post.commentsCount,
+                status: post.status,
+                timeLeft: post.timeLeftFormatted
+            }
         })
-    }catch(error){
+    } catch(error){
          res.status(400).json({
             success: false,
             error:message
@@ -93,18 +110,24 @@ router.patch("/:id/addcomment" , authenticateJWT,async(req, res) => {
 
 
 
-router.get("/:id", async(req , res) => {
+router.get("/:id",authenticateJWT, async(req , res) => {
     
-    //PostService = new PostService()
-    const id = req.params.id;
-    console.log(id)
+    
+   
     try{
-        const getFilms = await Post.findById(req.params.id)
-        const ok = await Post.find().limit(10)
-    
-        res.send(getFilms)
-    }catch(err){
-        res.send( {message:err + "oops" })
+        const post = await Post.findById(req.params.id)
+        if (!post) {
+            return res.status(404).json({ 
+                success: false, 
+                error: 'Post not found' 
+            });
+        }
+        res.json({ success: true, post });
+    } catch(error){
+         res.status(400).json({ 
+            success: false, 
+            error: error.message 
+        });
     }
 })
 
