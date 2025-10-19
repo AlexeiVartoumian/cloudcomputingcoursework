@@ -4,6 +4,7 @@ const app = express()
 
 
 const bodyParser = require('body-parser')
+const authRoutes = require('./routes/auth');
 const postRoute = require('./routes/posts')
 const userRoute = require('./routes/users')
 
@@ -17,15 +18,24 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 app.use("/posts" , postRoute)
 app.use("/user" , userRoute)
+app.use('/auth', authRoutes); 
 
 
-app.get('/', (req,res) => {
-    res.send("hello world");
+
+app.get('/', (req, res) => {
+    res.json({ 
+        success: true, 
+        message: "Mingle API is running",
+        endpoints: {
+            auth: "/auth",
+            posts: "/posts",
+            user: "/user"
+        }
+    });
 });
 
 
-
-const MONGODBURL = process.env.MONGO_URI+'/DBFilms'
+const MONGODBURL = process.env.MONGO_URI
 
 mongoose.connect(MONGODBURL)
   .then(() => console.log('Connected to MongoDB Atlas'))
