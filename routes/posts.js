@@ -131,6 +131,70 @@ router.get("/:id",authenticateJWT, async(req , res) => {
     }
 })
 
+router.get("/topic/:topic", authenticateJWT, async (req, res) => {
+    try {
+        const posts = await PostService.getPostsByTopic(req.params.topic);
+        res.status(200).json({ 
+            success: true, 
+            count: posts.length,
+            posts 
+        });
+    } catch (error) {
+        res.status(400).json({ 
+            success: false, 
+            error: error.message 
+        });
+    }
+});
+
+router.get("/topic/:topic/most-active", authenticateJWT, async (req, res) => {
+    try {
+        const post = await PostService.getMostActivePost(req.params.topic);
+        
+        if (!post) {
+            return res.status(404).json({
+                success: false,
+                error: 'No active posts found for this topic'
+            });
+        }
+        
+        res.status(200).json({ 
+            success: true, 
+            post: {
+                id: post._id,
+                title: post.title,
+                owner: post.owner,
+                likesCount: post.likesCount,
+                dislikesCount: post.dislikesCount,
+                totalInterest: post.likesCount + post.dislikesCount,
+                status: post.status,
+                timeLeft: post.timeLeftFormatted
+            }
+        });
+    } catch (error) {
+        res.status(400).json({ 
+            success: false, 
+            error: error.message 
+        });
+    }
+});
+
+router.get("/topic/:topic/expired", authenticateJWT, async (req, res) => {
+    try {
+        const posts = await PostService.getExpiredPostsByTopic(req.params.topic);
+        res.status(200).json({ 
+            success: true, 
+            count: posts.length,
+            posts 
+        });
+    } catch (error) {
+        res.status(400).json({ 
+            success: false, 
+            error: error.message 
+        });
+    }
+});
+
 
 
 module.exports = router   

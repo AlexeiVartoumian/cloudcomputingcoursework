@@ -4,9 +4,10 @@ const Post = require("../models/Post");
 
 //https://stackoverflow.com/questions/63218568/what-should-be-structure-of-service-layer-in-node-js
 
-
+//https://medium.com/better-programming/to-throw-or-not-to-throw-error-propagation-in-js-and-ts-68aaabe30e30
 class PostService {
 
+    
     async createPost(userId, { title, topic, body, expirationMinutes = 60 }) {
 
         try{
@@ -21,7 +22,7 @@ class PostService {
             await post.save();
             return post; 
         } catch (error){
-            return error
+            throw error;
         }
      }
 
@@ -36,7 +37,7 @@ class PostService {
             await post.save()
             return post
         } catch (error){
-            return error
+            throw error;
         }
      }
     
@@ -86,6 +87,57 @@ class PostService {
         
         return post
      }
+
+    async getPostsByTopic(topic) {
+        try {
+            const posts = await Post.find({ topic })
+                .populate('owner', 'name email')
+                .populate('comments.user', 'name')
+                .sort({ timestamp: -1 });
+            
+            return posts;
+        } catch (error) {
+            throw error;
+        }
+    }
+    async getMostActivePost(topic) {
+        try {
+            const posts = await Post.find({
+                topic,
+                expiration: { $gt: new Date() }
+            }).populate('owner', 'name email');
+            
+            if (posts.length === 0) {
+                return null;
+            }
+            
+            
+            const mostActive = posts.reduce((max, post) => {
+                const interest = post.likesCount + post.dislikesCount;
+                const maxInterest = max.likesCount + max.dislikesCount;
+                return interest > maxInterest ? post : max;
+            });
+            
+            return mostActive;
+        } catch (error) {
+            throw error;
+        }
+    }
+    async getExpiredPostsByTopic(topic) {
+        try {
+            const posts = await Post.find({
+                topic,
+                expiration: { $lt: new Date() }  
+            })
+                .populate('owner', 'name email')
+                .populate('comments.user', 'name')
+                .sort({ expiration: -1 }); 
+            
+            return posts;
+        } catch (error) {
+            throw error;
+        }
+    }
 
      
    
