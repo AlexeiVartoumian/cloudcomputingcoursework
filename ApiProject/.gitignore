@@ -1,0 +1,16 @@
+.venv/
+venv/
+env/
+ENV/
+__pycache__/
+node_modules/
+.backup/
+*.backup
+*.bak
+.env
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfvars
+.terraform.lock.hcl
+*.ini
