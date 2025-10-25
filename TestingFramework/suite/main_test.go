@@ -57,7 +57,7 @@ type Comment struct {
 func (s *MingleAPISuite) SetupSuite() {
 	s.baseURL = "http://35.233.10.169:3001"
 	s.tokens = make(map[string]string)
-	s.userIDs = make(map[string]string) //  Initialize
+	s.userIDs = make(map[string]string)
 	s.postIDs = make(map[string]map[string]string)
 
 	s.users = map[string]User{
@@ -93,15 +93,14 @@ func (s *MingleAPISuite) TearDownSuite() {
 func (s *MingleAPISuite) cleanDatabase() {
 	db := s.client.Database("DBFilms")
 
-	// Drop the actual collections (check capitalization)
-	collections := []string{"User", "Posts"} //  "Posts" not "Post"
+	collections := []string{"User", "Posts"}
 
 	for _, collName := range collections {
 		err := db.Collection(collName).Drop(context.TODO())
 		if err != nil {
 			s.T().Logf("Note: Collection %s: %v", collName, err)
 		} else {
-			s.T().Logf("✓ Dropped collection: %s", collName)
+			s.T().Logf("Dropped collection: %s", collName)
 		}
 	}
 }
@@ -132,7 +131,6 @@ func (s *MingleAPISuite) Test_TC01_UserRegistration() {
 			name, resp.StatusCode, string(bodyBytes),
 		)
 
-		//  Extract and store user ID from registration response
 		var registerResp map[string]interface{}
 		json.Unmarshal(bodyBytes, &registerResp)
 
@@ -182,7 +180,6 @@ func (s *MingleAPISuite) Test_TC02_GetOAuthTokens() {
 		s.Require().True(ok && token != "", "Token should be returned for "+name)
 		s.tokens[name] = token
 
-		//  Also extract user ID if not already stored
 		if s.userIDs[name] == "" {
 			if userObj, ok := tokenResp["user"].(map[string]interface{}); ok {
 				if id, ok := userObj["id"].(string); ok {
@@ -246,7 +243,6 @@ func (s *MingleAPISuite) Test_TC07_BrowsePosts() {
 	nickPosts := s.getPosts("Nick", "Tech")
 	olgaPosts := s.getPosts("Olga", "Tech")
 
-	// Filter to only posts from current test run (non-nil owners)
 	var validNickPosts []Post
 	var validOlgaPosts []Post
 
@@ -469,7 +465,7 @@ func (s *MingleAPISuite) Test_TC18_NestorBrowsesHealth() {
 
 	var found bool
 	for _, post := range posts {
-		//  Check Owner.Name instead of Owner directly
+
 		if post.Owner != nil && post.Owner.Name == "Nestor" && post.Title == "Health Tips" {
 			s.GreaterOrEqual(len(post.Comments), 1, "Should have comment")
 			found = true
