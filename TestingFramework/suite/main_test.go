@@ -465,7 +465,6 @@ func (s *MingleAPISuite) Test_TC18_NestorBrowsesHealth() {
 
 	var found bool
 	for _, post := range posts {
-
 		if post.Owner != nil && post.Owner.Name == "Nestor" && post.Title == "Health Tips" {
 			s.GreaterOrEqual(len(post.Comments), 1, "Should have comment")
 			found = true
