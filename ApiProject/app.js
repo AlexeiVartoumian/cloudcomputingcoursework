@@ -35,7 +35,7 @@ app.get('/', (req, res) => {
 });
 
 
-const MONGODBURL = process.env.MONGO_URI
+const MONGODBURL = process.env.MONGO_URI+"/DBFilms"
 
 mongoose.connect(MONGODBURL)
   .then(() => console.log('Connected to MongoDB Atlas'))

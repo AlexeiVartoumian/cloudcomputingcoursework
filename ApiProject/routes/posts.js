@@ -27,9 +27,16 @@ router.get("/test", async(req , res) => {
 router.post("/" , authenticateJWT, async(req, res) => {
     
     try{
-        payload = { title : req.body.title, topic : req.body.topic, body : req.body.message, expirationMinutes : 60 }
+        console.log('=== ROUTER POST DEBUG ===');
+        console.log('req.body:', req.body);
+        console.log('req.body.expirationMinutes:', req.body.expirationMinutes);
+        const topicArray = Array.isArray(req.body.topic) 
+            ? req.body.topic 
+            : [req.body.topic];
+        const expirationMinutes = req.body.expirationMinutes || 60;
+        payload = { title : req.body.title, topic : topicArray, body : req.body.message, expirationMinutes  }
         
-        const post = await PostService.createPost(req.body.user_id, payload)
+        const post = await PostService.createPost(req.user.id, payload)
          res.status(201).json({ 
             success: true, 
             post 
@@ -37,14 +44,14 @@ router.post("/" , authenticateJWT, async(req, res) => {
     } catch (error){
         res.status(400).json({
             success: false,
-            error:message
+            error: error.message
         })
     }
 })
-router.patch("/:id/like" , authenticateJWT,async(req, res) => {
+router.patch("/:id/like" , authenticateJWT, async(req, res) => {
 
     try {
-        const post = await PostService.likePost(req.params.id , req.body.user_id)
+        const post = await PostService.likePost(req.params.id , req.user.id)
         res.status(200).json({
             success:true,
             post: {
@@ -58,14 +65,14 @@ router.patch("/:id/like" , authenticateJWT,async(req, res) => {
     } catch(error){
         res.status(400).json({
             success: false,
-            error:message
+            error: error.message
         })
     }
 })
 router.patch("/:id/dislike" , authenticateJWT,async(req, res) => {
 
     try {
-        const post = await PostService.dislikePost(req.params.id , req.body.user_id)
+        const post = await PostService.dislikePost(req.params.id , req.user.id)
         res.status(200).json({
             success:true,
             post: {
@@ -79,7 +86,7 @@ router.patch("/:id/dislike" , authenticateJWT,async(req, res) => {
     } catch(error){
         res.status(400).json({
             success: false,
-            error:message
+            error: error.message
         })
     }
 })
@@ -88,7 +95,7 @@ router.patch("/:id/addcomment" , authenticateJWT,async(req, res) => {
     
     try {   
         
-        const post = await PostService.addComment(req.params.id , req.body.user_id , req.body.message)
+        const post = await PostService.addComment(req.params.id ,req.user.id , req.body.message)
         
         
         res.status(200).json({
@@ -103,7 +110,7 @@ router.patch("/:id/addcomment" , authenticateJWT,async(req, res) => {
     } catch(error){
          res.status(400).json({
             success: false,
-            error:message
+            error: error.message
         })
     }
 })
@@ -112,8 +119,6 @@ router.patch("/:id/addcomment" , authenticateJWT,async(req, res) => {
 
 router.get("/:id",authenticateJWT, async(req , res) => {
     
-    
-   
     try{
         const post = await Post.findById(req.params.id)
         if (!post) {
@@ -160,16 +165,7 @@ router.get("/topic/:topic/most-active", authenticateJWT, async (req, res) => {
         
         res.status(200).json({ 
             success: true, 
-            post: {
-                id: post._id,
-                title: post.title,
-                owner: post.owner,
-                likesCount: post.likesCount,
-                dislikesCount: post.dislikesCount,
-                totalInterest: post.likesCount + post.dislikesCount,
-                status: post.status,
-                timeLeft: post.timeLeftFormatted
-            }
+            post: post
         });
     } catch (error) {
         res.status(400).json({ 
