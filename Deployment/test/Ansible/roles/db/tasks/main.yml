@@ -1,0 +1,89 @@
+---
+# - name: Setup Docker and deploy express app from docker hub
+#   #hosts: db_vm
+#   #become: yes
+
+- name: Update apt cache
+  apt:
+    update_cache: yes
+    cache_valid_time: 3600
+
+- name: get apt key
+  ansible.builtin.get_url:
+    url: https://www.mongodb.org/static/pgp/server-7.0.asc
+    dest: /tmp/mongodb-server-7.0.asc
+    mode: '0644'
+  become: yes
+
+- name: Add mongdoDb gpg key
+  ansible.builtin.apt_key:
+    file: /tmp/mongodb-server-7.0.asc
+    keyring: /usr/share/keyrings/mongodb-server-7.0.gpg
+    state: present
+  become: yes
+
+- name: Add MongoDB repository
+  ansible.builtin.apt_repository:
+    repo: "deb [arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-7.0.gpg] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/7.0 multiverse"
+    state: present
+    filename: mongodb-org-7.0
+  become: yes
+
+- name: Install MongoDB
+  ansible.builtin.apt:
+    name: mongodb-org
+    state: present
+  become: yes
+
+- name: Ensure mongos service pre start script exists
+  template:
+    src: mongos_pre.sh.j2
+    dest: /usr/local/bin/mongos_pre.sh
+    owner: "{{ mongodb_user }}"
+    group: "{{ mongodb_group }}"
+    mode: 0755
+  tags:
+    - "setup"
+    - "mongodb"
+- name: Ensure mongos.service file exists
+  template:
+    src: mongos.service.j2
+    dest: /etc/systemd/system/mongos.service
+    owner: root
+    group: root
+  register: sysd
+  tags:
+    - "setup"
+    - "mongodb"
+
+- name: update conf file
+  template: 
+      src: mongo.conf.j2
+      dest: /etc/mongod.conf
+        
+  become: yes
+
+- name: start mongos service
+  service:
+    name: mongod
+    state: started
+    enabled: yes
+
+- name: copy some boiler
+  copy:
+    src: templates/DbRecords
+    dest: /tmp/
+
+- name: copy db setup script
+  template:
+    src: createDb.sh.j2
+    dest: /tmp/createDb.sh
+    mode: '0755'
+
+
+- name: create Db
+  shell: /tmp/createDb.sh
+  become: yes
+
+
+
