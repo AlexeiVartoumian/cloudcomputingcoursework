@@ -9,7 +9,7 @@ import (
 	"go.mongodb.org/mongo-driver/v2/mongo/options"
 )
 
-func initDB() {
+func initEnv() {
 
 	err := godotenv.Load("../.env")
 	if err != nil {
@@ -18,8 +18,20 @@ func initDB() {
 
 }
 
+func initApp() string {
+	initEnv()
+	app_ip := os.Getenv("APP_IP")
+
+	fmt.Println(app_ip)
+	if len(app_ip) < 1 {
+		panic("Warning AppIp did not load")
+	}
+	return app_ip
+
+}
+
 func ConnectDB() (*mongo.Client, error) {
-	initDB()
+	initEnv()
 	uri := os.Getenv("MONGO_URI")
 	fmt.Println(uri)
 	client, err := mongo.Connect(options.Client().ApplyURI(uri))

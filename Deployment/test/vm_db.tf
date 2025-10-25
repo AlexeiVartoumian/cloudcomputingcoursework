@@ -19,9 +19,7 @@ resource "google_compute_instance" "db_instance" {
     tags = ["db"]
 }
 
-locals {
-  
-}
+
 
 output "db_public_ip" {
     description = "Public IP address of the VM instance"
@@ -45,7 +43,7 @@ resource "google_compute_firewall" "db_allow" {
         ports    = ["22", "80", "3001", "27017"]
     }
 
-    source_ranges = ["0.0.0.0/0"] 
+    source_ranges = [var.ansible_ip , local.app_public_ip] 
     target_tags   = ["db"]
 }
 

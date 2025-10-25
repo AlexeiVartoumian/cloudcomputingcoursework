@@ -7,7 +7,7 @@ const Post = require("../models/Post");
 //https://medium.com/better-programming/to-throw-or-not-to-throw-error-propagation-in-js-and-ts-68aaabe30e30
 class PostService {
 
-    
+    //making cals to db need async keyword
     async createPost(userId, { title, topic, body, expirationMinutes = 60 }) {
 
         try{
@@ -38,9 +38,7 @@ class PostService {
         
         try{
             const post = await Post.findById(postId)
-            // payload = {  userId : userId, timestamp: Date.now(), comment: body }
-            // post.comments.push(payload)
-        
+           
             post.comments.push({  user : userId, timestamp: Date.now(), comment: body })
             await post.save()
             return post
