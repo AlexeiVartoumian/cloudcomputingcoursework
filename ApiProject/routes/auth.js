@@ -30,7 +30,7 @@ router.post('/register', async (req, res) => {
         const user = await UserService.createUser({ name, email, password });
         
         
-        const token = await AuthService.generateToken(user);
+        const token =  AuthService.generateToken(user);
         
         res.status(201).json({
             success: true,
@@ -68,7 +68,7 @@ router.post('/login', async (req, res) => {
         const user = await UserService.loginUser({ email, password });
         
        
-        const token = await AuthService.generateToken(user);
+        const token =  AuthService.generateToken(user);
         
         res.json({
             success: true,
