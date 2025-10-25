@@ -57,7 +57,7 @@ type Comment struct {
 func (s *MingleAPISuite) SetupSuite() {
 	s.baseURL = "http://35.233.10.169:3001"
 	s.tokens = make(map[string]string)
-	s.userIDs = make(map[string]string) // ✅ Initialize
+	s.userIDs = make(map[string]string) //  Initialize
 	s.postIDs = make(map[string]map[string]string)
 
 	s.users = map[string]User{
@@ -79,14 +79,14 @@ func (s *MingleAPISuite) SetupSuite() {
 
 	s.cleanDatabase()
 
-	fmt.Printf("\n🚀 Testing Mingle API: %s\n", s.baseURL)
-	fmt.Println("🗑️  Database cleaned and ready")
+	fmt.Printf("\n Testing Mingle API: %s\n", s.baseURL)
+	fmt.Println(" Database cleaned and ready")
 }
 
 func (s *MingleAPISuite) TearDownSuite() {
 	if s.client != nil {
 		s.client.Disconnect(context.TODO())
-		fmt.Println("\n✅ All tests completed")
+		fmt.Println("\n All tests completed")
 	}
 }
 
@@ -94,7 +94,7 @@ func (s *MingleAPISuite) cleanDatabase() {
 	db := s.client.Database("DBFilms")
 
 	// Drop the actual collections (check capitalization)
-	collections := []string{"User", "Posts"} // ✅ "Posts" not "Post"
+	collections := []string{"User", "Posts"} //  "Posts" not "Post"
 
 	for _, collName := range collections {
 		err := db.Collection(collName).Drop(context.TODO())
@@ -132,7 +132,7 @@ func (s *MingleAPISuite) Test_TC01_UserRegistration() {
 			name, resp.StatusCode, string(bodyBytes),
 		)
 
-		// ✅ Extract and store user ID from registration response
+		//  Extract and store user ID from registration response
 		var registerResp map[string]interface{}
 		json.Unmarshal(bodyBytes, &registerResp)
 
@@ -142,7 +142,7 @@ func (s *MingleAPISuite) Test_TC01_UserRegistration() {
 			}
 		}
 
-		s.T().Logf("✅ Registered: %s (ID: %s)", name, s.userIDs[name])
+		s.T().Logf(" Registered: %s (ID: %s)", name, s.userIDs[name])
 	}
 }
 
@@ -182,7 +182,7 @@ func (s *MingleAPISuite) Test_TC02_GetOAuthTokens() {
 		s.Require().True(ok && token != "", "Token should be returned for "+name)
 		s.tokens[name] = token
 
-		// ✅ Also extract user ID if not already stored
+		//  Also extract user ID if not already stored
 		if s.userIDs[name] == "" {
 			if userObj, ok := tokenResp["user"].(map[string]interface{}); ok {
 				if id, ok := userObj["id"].(string); ok {
@@ -191,7 +191,7 @@ func (s *MingleAPISuite) Test_TC02_GetOAuthTokens() {
 			}
 		}
 
-		s.T().Logf("✅ Token retrieved: %s (ID: %s)", name, s.userIDs[name])
+		s.T().Logf(" Token retrieved: %s (ID: %s)", name, s.userIDs[name])
 	}
 }
 
@@ -210,7 +210,7 @@ func (s *MingleAPISuite) Test_TC03_UnauthorizedAccess() {
 		"Should reject unauthorized request")
 
 	resp.Body.Close()
-	s.T().Log("✅ Unauthorized access correctly rejected")
+	s.T().Log(" Unauthorized access correctly rejected")
 }
 
 // ============================================================================
@@ -266,12 +266,12 @@ func (s *MingleAPISuite) Test_TC07_BrowsePosts() {
 	s.Require().Len(validOlgaPosts, 3, "Olga should see 3 posts in Tech")
 
 	for _, post := range validNickPosts {
-		s.Equal(0, len(post.Likes), "Post should have 0 likes")       // ✅ len()
-		s.Equal(0, len(post.Dislikes), "Post should have 0 dislikes") // ✅ len()
+		s.Equal(0, len(post.Likes), "Post should have 0 likes")       //  len()
+		s.Equal(0, len(post.Dislikes), "Post should have 0 dislikes") //  len()
 		s.Empty(post.Comments, "Post should have no comments")
 	}
 
-	s.T().Log("✅ All posts visible with zero interactions")
+	s.T().Log(" All posts visible with zero interactions")
 }
 
 // ============================================================================
@@ -286,7 +286,7 @@ func (s *MingleAPISuite) Test_TC08_LikeMaryPost() {
 	s.likePost("Nick", maryPostID)
 	s.likePost("Olga", maryPostID)
 
-	s.T().Log("✅ Nick and Olga liked Mary's post")
+	s.T().Log(" Nick and Olga liked Mary's post")
 }
 
 // ============================================================================
@@ -301,7 +301,7 @@ func (s *MingleAPISuite) Test_TC09_NestorInteractions() {
 	s.likePost("Nestor", nickPostID)
 	s.dislikePost("Nestor", maryPostID)
 
-	s.T().Log("✅ Nestor's interactions completed")
+	s.T().Log(" Nestor's interactions completed")
 }
 
 // ============================================================================
@@ -319,7 +319,7 @@ func (s *MingleAPISuite) Test_TC10_VerifyInteractions() {
 	s.Equal(1, len(maryPost.Dislikes), "Mary should have 1 dislike")
 	s.Equal(1, len(nickPost.Likes), "Nick should have 1 like")
 
-	s.T().Log("✅ Interaction counts verified")
+	s.T().Log(" Interaction counts verified")
 }
 
 // ============================================================================
@@ -346,7 +346,7 @@ func (s *MingleAPISuite) Test_TC11_CannotLikeOwnPost() {
 		resp.StatusCode, string(bodyBytes),
 	)
 
-	s.T().Log("✅ Own post like correctly rejected")
+	s.T().Log(" Own post like correctly rejected")
 }
 
 // ============================================================================
@@ -371,7 +371,7 @@ func (s *MingleAPISuite) Test_TC12_CommentsOnMaryPost() {
 		s.commentOnPost(c.user, maryPostID, c.content)
 	}
 
-	s.T().Log("✅ 4 comments added")
+	s.T().Log(" 4 comments added")
 }
 
 // ============================================================================
@@ -386,7 +386,7 @@ func (s *MingleAPISuite) Test_TC13_VerifyComments() {
 	s.GreaterOrEqual(len(maryPost.Comments), 4,
 		"Mary's post should have at least 4 comments")
 
-	s.T().Logf("✅ Verified %d comments", len(maryPost.Comments))
+	s.T().Logf(" Verified %d comments", len(maryPost.Comments))
 }
 
 // ============================================================================
@@ -407,7 +407,7 @@ func (s *MingleAPISuite) Test_TC15_MaryBrowsesHealth() {
 	s.Require().Len(posts, 1, "Should see only Nestor's post")
 	s.Equal("Nestor", posts[0].Owner.Name, "Post should be from Nestor")
 
-	s.T().Log("✅ Mary sees Nestor's post")
+	s.T().Log(" Mary sees Nestor's post")
 }
 
 // ============================================================================
@@ -419,7 +419,7 @@ func (s *MingleAPISuite) Test_TC16_MaryCommentsOnNestor() {
 	nestorPostID := s.postIDs["Nestor"]["Health"]
 	s.commentOnPost("Mary", nestorPostID, "Great advice!")
 
-	s.T().Log("✅ Mary commented")
+	s.T().Log(" Mary commented")
 }
 
 // ============================================================================
@@ -456,7 +456,7 @@ func (s *MingleAPISuite) Test_TC17_ExpiredPostInteraction() {
 		resp.StatusCode, string(bodyBytes),
 	)
 
-	s.T().Log("✅ Expired post interaction rejected")
+	s.T().Log(" Expired post interaction rejected")
 }
 
 // ============================================================================
@@ -469,7 +469,7 @@ func (s *MingleAPISuite) Test_TC18_NestorBrowsesHealth() {
 
 	var found bool
 	for _, post := range posts {
-		// ✅ Check Owner.Name instead of Owner directly
+		//  Check Owner.Name instead of Owner directly
 		if post.Owner != nil && post.Owner.Name == "Nestor" && post.Title == "Health Tips" {
 			s.GreaterOrEqual(len(post.Comments), 1, "Should have comment")
 			found = true
@@ -478,7 +478,7 @@ func (s *MingleAPISuite) Test_TC18_NestorBrowsesHealth() {
 	}
 
 	s.True(found, "Should find Nestor's post with comment")
-	s.T().Log("✅ Nestor sees his post with comment")
+	s.T().Log(" Nestor sees his post with comment")
 }
 
 // ============================================================================
@@ -498,7 +498,7 @@ func (s *MingleAPISuite) Test_TC19_BrowseEmptySports() {
 	resp.Body.Close()
 
 	s.Empty(posts, "Sport should be empty")
-	s.T().Log("✅ Sports topic is empty")
+	s.T().Log(" Sports topic is empty")
 }
 
 // ============================================================================
@@ -529,7 +529,7 @@ func (s *MingleAPISuite) Test_TC20_MostActivePost() {
 
 	s.Require().NotNil(post.Owner, "Post should have owner")
 	s.Equal("Mary", post.Owner.Name, "Mary's post should be most active")
-	s.T().Logf("✅ Most active: %s (Likes: %d, Dislikes: %d)",
+	s.T().Logf(" Most active: %s (Likes: %d, Dislikes: %d)",
 		post.Owner.Name, len(post.Likes), len(post.Dislikes))
 }
 
@@ -547,7 +547,7 @@ func (s *MingleAPISuite) createPost(user, topic, title, messageBody string) {
 
 	postID := s.createPostRaw(user, postData)
 	s.postIDs[user][topic] = postID
-	s.T().Logf("✅ %s posted in %s", user, topic)
+	s.T().Logf(" %s posted in %s", user, topic)
 }
 
 func (s *MingleAPISuite) createPostRaw(user string, postData map[string]interface{}) string {
