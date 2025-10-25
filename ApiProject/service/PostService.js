@@ -11,6 +11,14 @@ class PostService {
     async createPost(userId, { title, topic, body, expirationMinutes = 60 }) {
 
         try{
+            console.log('=== CREATE POST DEBUG ===');
+        console.log('expirationMinutes received:', expirationMinutes);
+        console.log('Current Date.now():', Date.now());
+        console.log('Milliseconds to add:', expirationMinutes * 60 * 1000);
+        
+        const expirationDate = new Date(Date.now() + expirationMinutes * 60 * 1000);
+        console.log('Calculated expiration date:', expirationDate);
+        console.log('Current date for comparison:', new Date());
             const post = new Post({
                 title,
                 topic,
@@ -48,9 +56,13 @@ class PostService {
             throw new Error('Post not found');
         }
 
-        if (post.status == "expired"){
+        if (post.status == "Expired"){
             throw new Error('Cannot interact with expired post');
         } 
+
+        if (post.owner == userId) {
+            throw new Error('Cannot like own post')
+        }
 
         //https://www.w3schools.com/jsref/jsref_filter.asp use predicate to filter existing id 
         post.dislikes = post.dislikes.filter(id => !id.equals(userId));
@@ -71,14 +83,20 @@ class PostService {
             throw new Error('Post not found');
         }
 
-        if (post.status == "expired"){
+        console.log('Post expiration:', post.expiration);
+        console.log('Current time:', new Date());
+        console.log('Status:', post.status); 
+        if (post.status == "Expired"){
             throw new Error('Cannot interact with expired post');
         } 
 
+        if (post.owner == userId) {
+            throw new Error('Cannot dislike own post')
+        }
+
         //https://www.w3schools.com/jsref/jsref_filter.asp use predicate to filter existing id 
         post.likes = post.likes.filter(id => !id.equals(userId));
-        console.log(post.likes)
-        console.log(post.dislikes)
+        
         if (!post.dislikes.some(id => id.equals(userId))) {
             post.dislikes.push(userId);
             
@@ -90,7 +108,7 @@ class PostService {
 
     async getPostsByTopic(topic) {
         try {
-            const posts = await Post.find({ topic })
+            const posts = await Post.find({ topic: topic })
                 .populate('owner', 'name email')
                 .populate('comments.user', 'name')
                 .sort({ timestamp: -1 });
@@ -105,7 +123,9 @@ class PostService {
             const posts = await Post.find({
                 topic,
                 expiration: { $gt: new Date() }
-            }).populate('owner', 'name email');
+            })
+                .populate('owner', 'name email')
+                .populate('comments.user', 'name')
             
             if (posts.length === 0) {
                 return null;
@@ -113,8 +133,8 @@ class PostService {
             
             
             const mostActive = posts.reduce((max, post) => {
-                const interest = post.likesCount + post.dislikesCount;
-                const maxInterest = max.likesCount + max.dislikesCount;
+                const interest = post.likes.length + post.dislikes.length;
+                const maxInterest = max.likes.length + max.dislikes.length;
                 return interest > maxInterest ? post : max;
             });
             

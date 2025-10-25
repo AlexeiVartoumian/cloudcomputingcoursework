@@ -1,0 +1,17 @@
+#!/bin/bash
+
+SCRIPT_DIR="$(dirname "$0")"
+
+#mongosh "mongodb://104.199.72.253:27017"
+mongosh mongodb://localhost:27017 <<'EOF'
+use DBFilms
+db.createCollection("ColFilms")
+EOF
+
+
+for json_file in "$SCRIPT_DIR"/DbRecords/*.json; do
+    if [ -f "$json_file" ]; then 
+        #mongosh "mongodb://104.199.72.253:27017/DBFilms" --eval "db.ColFilms.insertOne($(cat "$json_file"))"
+        mongosh "mongodb://localhost:27017/DBFilms" --eval "db.ColFilms.insertOne($(cat "$json_file"))"
+    fi
+done

@@ -1,5 +1,5 @@
 const User = require("../models/User")
-const bcrypt = require('brcyptjs')
+const bcrypt = require('bcryptjs')
 
 //https://www.reddit.com/r/rails/comments/itivdn/where_did_concept_of_service_object_come_from/
 
@@ -8,11 +8,7 @@ const bcrypt = require('brcyptjs')
 
 class UserService {
 
-    
-
     async createUser({ name, email, password  }) {
-
-        
 
         const hashedPassword = await bcrypt.hash(password , 10 );
 

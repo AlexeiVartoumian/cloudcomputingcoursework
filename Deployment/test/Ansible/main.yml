@@ -1,0 +1,13 @@
+---
+- name: setup db
+  hosts: db_vm 
+  become: yes
+  roles:
+    - db
+
+- name: setup_vm
+  hosts: gcp_vm
+  become: yes
+  roles:
+    - app
+    

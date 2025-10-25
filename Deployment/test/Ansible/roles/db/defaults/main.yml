@@ -1,0 +1,6 @@
+---
+mongos_port: "27017"
+bind_ip: "0.0.0.0"
+mongodb_user: "mongodb"
+mongodb_group: "mongodb"
+pid_file: /var/run/mongodb/mongod.pid
