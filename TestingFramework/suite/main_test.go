@@ -55,7 +55,7 @@ type Comment struct {
 }
 
 func (s *MingleAPISuite) SetupSuite() {
-	s.baseURL = "http://35.233.10.169:3001"
+	s.baseURL = initApp()
 	s.tokens = make(map[string]string)
 	s.userIDs = make(map[string]string)
 	s.postIDs = make(map[string]map[string]string)
@@ -91,7 +91,7 @@ func (s *MingleAPISuite) TearDownSuite() {
 }
 
 func (s *MingleAPISuite) cleanDatabase() {
-	db := s.client.Database("DBFilms")
+	db := s.client.Database("DBMingle")
 
 	collections := []string{"User", "Posts"}
 
@@ -262,8 +262,8 @@ func (s *MingleAPISuite) Test_TC07_BrowsePosts() {
 	s.Require().Len(validOlgaPosts, 3, "Olga should see 3 posts in Tech")
 
 	for _, post := range validNickPosts {
-		s.Equal(0, len(post.Likes), "Post should have 0 likes")       //  len()
-		s.Equal(0, len(post.Dislikes), "Post should have 0 dislikes") //  len()
+		s.Equal(0, len(post.Likes), "Post should have 0 likes")
+		s.Equal(0, len(post.Dislikes), "Post should have 0 dislikes")
 		s.Empty(post.Comments, "Post should have no comments")
 	}
 
