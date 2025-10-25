@@ -1,21 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const jwt = require('jsonwebtoken');
 const UserService = require('../service/UserService');
+const AuthService = require('../service/AuthService');
 require('dotenv').config();
 
 
-const generateToken = (user) => {
-    return jwt.sign(
-        { 
-            id: user._id, 
-            email: user.email,
-            name: user.name
-        },
-        process.env.JWT_SECRET,
-        { expiresIn: process.env.JWT_EXPIRES_IN || '1h' }
-    );
-};
 
 
 router.post('/register', async (req, res) => {
@@ -41,7 +30,7 @@ router.post('/register', async (req, res) => {
         const user = await UserService.createUser({ name, email, password });
         
         
-        const token = generateToken(user);
+        const token = await AuthService.generateToken(user);
         
         res.status(201).json({
             success: true,
@@ -79,7 +68,7 @@ router.post('/login', async (req, res) => {
         const user = await UserService.loginUser({ email, password });
         
        
-        const token = generateToken(user);
+        const token = await AuthService.generateToken(user);
         
         res.json({
             success: true,
