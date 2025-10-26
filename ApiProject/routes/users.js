@@ -12,7 +12,7 @@ const { authenticateJWT } = require('../middleware/auth');
 router.get("/", authenticateJWT, async(req , res) => {
     
     try{
-        const getFilms = await User.find().limit(10)
+        const users = await User.find().limit(10)
         
         res.status(200).json({ 
             success: true, 

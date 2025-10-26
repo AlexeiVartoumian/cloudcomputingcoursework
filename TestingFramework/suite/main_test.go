@@ -210,6 +210,34 @@ func (s *MingleAPISuite) Test_TC03_UnauthorizedAccess() {
 	s.T().Log(" Unauthorized access correctly rejected")
 }
 
+func (s *MingleAPISuite) Test_TC21_ShowUsers() {
+	s.T().Log("\n=== TC0: Nestor tries to view all users ===")
+	req, _ := http.NewRequest("GET", s.baseURL+"/user", nil)
+
+	req.Header.Set("authorization", "Bearer "+s.tokens["Nestor"])
+
+	resp, _ := http.DefaultClient.Do(req)
+
+	BodyBytes, _ := io.ReadAll(resp.Body)
+	resp.Body.Close()
+
+	var wrappedResp struct {
+		Success bool   `json:"success"`
+		User    []User `json:"users"`
+	}
+
+	err := json.Unmarshal(BodyBytes, &wrappedResp)
+
+	s.Require().NoError(err, "Failed to parse response %s", string(BodyBytes))
+
+	var NumUsers []User
+
+	NumUsers = append(NumUsers, wrappedResp.User...)
+
+	s.Require().Len(NumUsers, 4, "Number of users should be 4")
+
+}
+
 // ============================================================================
 // TC4: Olga Posts Message
 // ============================================================================
