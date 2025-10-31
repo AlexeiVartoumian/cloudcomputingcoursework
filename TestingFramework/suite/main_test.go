@@ -215,7 +215,7 @@ func (s *MingleAPISuite) Test_TC03_UnauthorizedAccess() {
 // ============================================================================
 func (s *MingleAPISuite) Test_TC04_OlgaPostsMessage() {
 	s.T().Log("\n=== TC4: Olga posts message in Tech topic ===")
-	s.createPost("Olga", "Tech", "Olga's Tech Post", "AI is transforming everything")
+	s.createPost("Olga", "Tech", "Olga's Tech Post", "AWS goes down.A Lesson learnt")
 }
 
 // ============================================================================

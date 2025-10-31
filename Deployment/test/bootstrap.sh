@@ -15,3 +15,5 @@ fi
 
 terraform plan -var-file="${WORKSPACE_DIRECTORY}/${Config}.tfvars"
 terraform apply -var-file="${WORKSPACE_DIRECTORY}/${Config}.tfvars"
+
+

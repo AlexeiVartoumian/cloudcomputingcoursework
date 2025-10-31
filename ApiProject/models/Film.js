@@ -1,5 +1,8 @@
 const mongoose = require('mongoose');
 
+//** Film schema remains from cloud labs. 
+// Design choice to keep it here for Ansible Playbook provisioning as a test collection to validate configuration. 
+//  see Deployment\test\Ansible\roles\db\tasks\templates\createDb.sh.j2 */
 const FilmSchema = new mongoose.Schema(
     {
     title: {
