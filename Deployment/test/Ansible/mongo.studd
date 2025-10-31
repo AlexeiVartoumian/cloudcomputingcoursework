@@ -28,7 +28,7 @@ yamlnet:
 mongosh mongodb://35.205.148.179:27017
 
 show dbs
-use DBFilms 
+use DBMingle
 db.createCollection("ColFilms")
 
 

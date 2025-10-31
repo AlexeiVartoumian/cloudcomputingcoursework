@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 
 // relations to Users are defined in key value db mongo with reference "ref: 'table to relate to '". 
 // In this case Relations here are actions performed by a User such as liking , disliking or commenting on a post.
-// Specifically relations are meant to mean key value pairs pointing to other objects and not relations as in SQL relations.  
+// explicitly relations are meant to mean NOSQL key value pairs pointing to other objects and not relations as in SQL relations.  
 const postSchema = new mongoose.Schema({
     
     title:      {   type: String, 

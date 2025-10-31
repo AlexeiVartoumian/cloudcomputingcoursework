@@ -31,11 +31,11 @@ router.get("/", authenticateJWT, async(req , res) => {
 
 router.get("/:id", async(req , res) => {
     
-    //PostService = new PostService()
+    
     const id = req.params.id;
     console.log(id)
     try{
-        //const getFilms = await User.findById(req.params.id)
+        
         
         const user = await UserService.getUserById(req.params.id)
         //res.send(user)

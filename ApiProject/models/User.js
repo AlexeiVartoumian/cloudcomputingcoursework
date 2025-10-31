@@ -1,7 +1,7 @@
 
 const mongoose = require('mongoose');
 
-
+//user schema a unique index on email only . additional basic validation checks are done on name and password 
 const userSchema = new mongoose.Schema({
     name:  {
 

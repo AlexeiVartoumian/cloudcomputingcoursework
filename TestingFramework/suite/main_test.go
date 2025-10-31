@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"strings"
 	"testing"
 	"time"
 
@@ -215,7 +216,7 @@ func (s *MingleAPISuite) Test_TC03_UnauthorizedAccess() {
 // ============================================================================
 func (s *MingleAPISuite) Test_TC04_OlgaPostsMessage() {
 	s.T().Log("\n=== TC4: Olga posts message in Tech topic ===")
-	s.createPost("Olga", "Tech", "Olga's Tech Post", "AI is transforming everything")
+	s.createPost("Olga", "Tech", "Olga's Tech Post", "AWS goes down.A Lesson learnt")
 }
 
 // ============================================================================
@@ -585,6 +586,65 @@ func (s *MingleAPISuite) Test_TC22_GetOneUser() {
 	s.Require().NoError(err, "Failed to parse Response %s", string(BodyBytes))
 
 	s.Equal("Nick", wrappedResp.User.Name, "Expected to Get Nick")
+}
+
+// ============================================================================
+// TC23: Register User with short password
+// ============================================================================
+func (s *MingleAPISuite) Test_TC23_RegisterBadUser() {
+	s.T().Log("\n=== TC23: User attempts to register with short password ===")
+
+	User := User{Name: "dummy", Email: "false@mingle.com", Password: "short"}
+
+	body, _ := json.Marshal(User)
+
+	resp, err := http.Post(
+		s.baseURL+"/auth/register",
+		"application/json",
+		bytes.NewBuffer(body),
+	)
+
+	s.Require().NoError(err, "Should make request for "+User.Name)
+
+	bodyBytes, _ := io.ReadAll(resp.Body)
+	resp.Body.Close()
+	fmt.Println(string(bodyBytes))
+	s.Require().True(
+		resp.StatusCode != http.StatusOK || resp.StatusCode == http.StatusCreated,
+		"Expected User  %s registration failed. Status: %d, Body: %s",
+		User.Name, resp.StatusCode, string(bodyBytes),
+	)
+
+}
+
+// ============================================================================
+// TC23: Register User with short password
+// ============================================================================
+func (s *MingleAPISuite) Test_TC24_RegisterBadUserTwo() {
+	s.T().Log("\n=== TC23: User attempts to register with a long name ===")
+
+	LongName := strings.Repeat("a", 257)
+	User := User{Name: LongName, Email: "false2@mingle.com", Password: "PasswordOk"}
+
+	body, _ := json.Marshal(User)
+
+	resp, err := http.Post(
+		s.baseURL+"/auth/register",
+		"application/json",
+		bytes.NewBuffer(body),
+	)
+
+	s.Require().NoError(err, "Should make request for "+User.Name)
+
+	bodyBytes, _ := io.ReadAll(resp.Body)
+	resp.Body.Close()
+	fmt.Println(string(bodyBytes))
+	s.Require().True(
+		resp.StatusCode != http.StatusOK || resp.StatusCode == http.StatusCreated,
+		"Expected User  %s registration failed. Status: %d, Body: %s",
+		User.Name, resp.StatusCode, string(bodyBytes),
+	)
+
 }
 
 // ============================================================================
