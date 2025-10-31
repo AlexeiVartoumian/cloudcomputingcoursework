@@ -588,6 +588,35 @@ func (s *MingleAPISuite) Test_TC22_GetOneUser() {
 }
 
 // ============================================================================
+// TC23: Register User with short password
+// ============================================================================
+func (s *MingleAPISuite) Test_TC23_RegisterBadUser() {
+	s.T().Log("\n=== TC23: User attempts to register with short password ===")
+
+	User := User{Name: "dummy", Email: "false@mingle.com", Password: "short"}
+
+	body, _ := json.Marshal(User)
+
+	resp, err := http.Post(
+		s.baseURL+"/auth/register",
+		"application/json",
+		bytes.NewBuffer(body),
+	)
+
+	s.Require().NoError(err, "Should make request for "+User.Name)
+
+	bodyBytes, _ := io.ReadAll(resp.Body)
+	resp.Body.Close()
+	fmt.Println(string(bodyBytes))
+	s.Require().True(
+		resp.StatusCode != http.StatusOK || resp.StatusCode == http.StatusCreated,
+		"Expected User  %s registration failed. Status: %d, Body: %s",
+		User.Name, resp.StatusCode, string(bodyBytes),
+	)
+
+}
+
+// ============================================================================
 // Helper Methods
 // ============================================================================
 
