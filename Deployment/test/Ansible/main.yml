@@ -10,4 +10,9 @@
   become: yes
   roles:
     - app
-    
+
+- name: setup_test_suite
+  hosts: test_suite_vm
+  become: yes
+  roles:
+    - test_suite

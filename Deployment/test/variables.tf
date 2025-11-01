@@ -3,8 +3,15 @@ variable "ansible_ip" {
 }
 
 variable "vm_name"{
+    type = string
     default = "cloud-computing-class"
 }
+
+variable "test_suite_vm_name" {
+    type = string
+    default= "test-suite-vm"
+}
+
 variable "db_name"{
     type = string
     default = "db"
@@ -24,11 +31,9 @@ variable "app_ports" {
     default = ["22", "80", "3001"]
 } 
 
-variable "source_ranges" {
-    description = "please set this"
-    default = ["127.0.0.1"]
-}
+
 variable "target_tags" {
  type = list(string)
  default = [ "vm" ]
 }
+
