@@ -25,10 +25,23 @@ module "app_vm"{
     target_tags = ["allow-ssh", "web-server"]
 }
 
+
+module "test_suite_vm" {
+    source = "./modules/compute"
+    ansible_ip = var.ansible_ip
+    network_name = module.vpc_network.network_name
+    vm_name = var.test_suite_vm_name
+    ssh_key = var.ssh_key
+    ports = var.app_ports
+    source_ranges = ["0.0.0.0/0"]
+    target_tags = ["allow-ssh", "web-server"]
+}
+
 resource "local_file" "ansible_inventory" {
     content = templatefile("${path.module}/inventory.tpl", {
       vm_ip  = module.app_vm.vm_ip
       db_ip = module.db_vm.vm_ip
+      test_suite_ip = module.test_suite_vm.vm_ip
     })
     filename = "${path.module}/inventory.ini"
 
