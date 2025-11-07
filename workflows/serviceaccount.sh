@@ -23,3 +23,15 @@ gcloud iam workload-identity-pools create "github-pool" \
 gsutil mb -p cloudcomputing-473914 -l europe-west2 gs://cloudcomputing-473914-terraform-state
 gsutil versioning set on gs://cloudcomputing-473914-terraform-state
 gsutil iam ch serviceAccount:github-actions-sa@cloudcomputing-473914.iam.gserviceaccount.com:objectAdmin gs://cloudcomputing-473914-terraform-state
+
+gcloud projects add-iam-policy-binding cloudcomputing-473914 \
+  --member="serviceAccount:github-actions-sa@cloudcomputing-473914.iam.gserviceaccount.com" \
+  --role="roles/compute.admin"
+
+gcloud projects add-iam-policy-binding cloudcomputing-473914 \
+  --member="serviceAccount:github-actions-sa@cloudcomputing-473914.iam.gserviceaccount.com" \
+  --role="roles/iam.serviceAccountUser"
+
+  gcloud projects add-iam-policy-binding cloudcomputing-473914 \
+  --member="serviceAccount:github-actions-sa@cloudcomputing-473914.iam.gserviceaccount.com" \
+  --role="roles/compute.securityAdmin"

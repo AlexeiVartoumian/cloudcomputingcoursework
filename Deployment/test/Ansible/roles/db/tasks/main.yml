@@ -1,7 +1,4 @@
 ---
-# - name: Setup Docker and deploy express app from docker hub
-#   #hosts: db_vm
-#   #become: yes
 
 - name: Update apt cache
   apt:
