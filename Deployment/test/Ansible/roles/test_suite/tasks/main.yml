@@ -44,6 +44,8 @@
   args:
     chdir: /home/ubuntu/TestingFramework/suite
 
+
+
 - name: Run tests
   shell: go test -v
   args:

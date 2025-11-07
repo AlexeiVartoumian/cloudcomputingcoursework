@@ -38,7 +38,7 @@ router.get("/:id", async(req , res) => {
         
         
         const user = await UserService.getUserById(req.params.id)
-        //res.send(user)
+        
         res.status(200).json({ 
             success: true, 
             user 

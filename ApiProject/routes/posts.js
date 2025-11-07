@@ -11,15 +11,25 @@ const Post = require("../models/Post")
 const PostService = require("../service/PostService")
 const { authenticateJWT } = require('../middleware/auth');
 
-router.get("/test", async(req , res) => {
 
+
+router.get("/" , authenticateJWT , async(req , res) => {
     try{
-        const getFilms = await Post.find().limit(10)
-        res.send(getFilms)
+        const posts = await Post.find().limit(10)
+        
+        res.status(200).json({ 
+            success: true, 
+            posts 
+        });
     }catch(err){
-        res.send( {message:err + "oops" })
+        res.status(400).json({ 
+            success: false, 
+            error: error.message 
+        });
     }
 })
+
+ 
 
 
 //https://expressjs.com/en/guide/error-handling.html
