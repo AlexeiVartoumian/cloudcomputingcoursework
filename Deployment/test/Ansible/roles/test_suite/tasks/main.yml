@@ -44,16 +44,6 @@
   args:
     chdir: /home/ubuntu/TestingFramework/suite
 
-- name: Create a env file
-  copy:
-    content: | 
-               MONGO_URI=mongodb://{{ groups['db_vm'][0] }}:27017 
-               APP_IP=http://{{ groups['gcp_vm'][0] }}:3001 
-    dest: /home/ubuntu/TestingFramework/.env
-- name: Creating an empty file
-  file:
-      path: "/home/ubuntu/TestingFramework/fuckyou.txt"
-      state: touch
 
 
 - name: Run tests
