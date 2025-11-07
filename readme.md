@@ -1,6 +1,6 @@
 # Cloud Computing Coursework
 
-excercise for end to end automation that deploys, configures and tests an API hosted on GCP. 
+excercise for end to end automation that deploys, configures and tests an API hosted on GCP via github actions.
 
 ![alt text](/assets/cloudcomputingcoursework.png)
 
@@ -15,9 +15,10 @@ excercise for end to end automation that deploys, configures and tests an API ho
 - **Ansible ,Terraform , and GCP credentials are installed and configured on local**
 - **Common ssh key**
 
-## Steps To deploy 
+## Steps To deploy (note to self for local deployment)
 - cd Deployment/test
 - chmod +x bootstrap.sh
 - ./bootstrap.sh
 - chmod +x trigger.sh
 - ./trigger.sh
+

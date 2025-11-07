@@ -30,10 +30,6 @@ output "vm_public_ip" {
     value       = local.vm_ip
 }
 
-# resource "google_compute_network" "vpc_network" {
-#     name =  "terraform-network"
-#     auto_create_subnetworks = "true"
-# }
 
 resource "google_compute_firewall" "ssh_allow" {
     name    = "${var.vm_name}-firewall"
@@ -50,12 +46,3 @@ resource "google_compute_firewall" "ssh_allow" {
     source_ranges = var.source_ranges
     target_tags   = var.target_tags
 }
-
-# resource "local_file" "ansible_inventory" {
-#     content = templatefile("${path.module}/inventory.tpl", {
-#       vm_ip  = local.app_public_ip
-#       db_ip = local.db_public_ip
-#     })
-#     filename = "${path.module}/inventory.ini"
-
-# }

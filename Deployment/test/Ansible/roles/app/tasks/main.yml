@@ -1,11 +1,4 @@
 ---
-#- name: Setup Docker and deploy express app from docker hub
-  #hosts: gcp_vm
-  #become: yes
-  #vars:
-    # app_dir: "/home/ubuntu/app"
-    # docker_image_app: "alexvartoumian/express-app:latest"
-  #tasks: 
 - name: Update apt cache
   apt:
     update_cache: yes
@@ -62,14 +55,6 @@
   command: docker pull {{ docker_image_app }}
   become: yes
 
-# - name: Run docker container
-#   command: >
-#     docker run -d
-#     --name express-app
-#     --restart always
-#     -p 3001:3001
-#     {{ docker_image_app }}
-#   become: yes
 - name: Run express app container
   docker_container:
     name: express-app
@@ -84,83 +69,4 @@
     recreate: yes
     
   become: yes
-    #- name: Run Docker container
-    #   docker_container:
-    #     name: express-app
-    #     image: "{{ docker_image }}"
-    #     state: started
-    #     restart_policy: always
-    #     recreate: yes
-    #     pull: yes 
-    #     ports: 
-    #       - "3001:3001"
-     
-    
-    # - name: Debug - Check Docker info
-    #   command: docker info
-    #   register: docker_info
-    #   changed_when: false
-
-    # - name: Debug - Show docker info
-    #   debug:
-    #     var: docker_info.stdout
-
-    # - name: Debug - Check Python docker module
-    #   command: python3 -c "import docker; print(docker.from_env().version())"
-    #   register: docker_version
-    #   changed_when: false
-
-    # - name: Debug - Show docker version
-    #   debug:
-    #     var: docker_version.stdout
-
-    
-      
-
-    # - name: Pull Docker image from docker hub
-    #   docker_image:
-    #     name: "{{ docker_image }}"
-    #     source: pull
-    #     force_source: yes
-    #     docker_host: unix:///var/run/docker.sock
-      
-    # - name: Run Docker container
-    #   docker_container:
-    #     name: express-app
-    #     image: "{{ docker_image }}"
-    #     state: started
-    #     restart_policy: always
-    #     recreate: yes
-    #     pull: yes 
-    #     ports: 
-    #       - "3001:3001"
-    # - name: stop existing container
-    #   doc
-    #     name: pm2
-    #     global: yes
-    #   state: present
-
-    # - name: stop existing pm2 processes
-    #   command: pm2 delete all 
-    #   become_user: ubuntu
-    #   ignore_errors: yes
-    
-    # - name: start Express app with pm2
-    #   command: pm2 start server.js ==name express-app
-    #   args:
-    #     chdir: "{{ app_dir }}"
-    #   become_user: ubuntu
-    
-    # - name: save pm2 configruation
-    #   command: pm2 save
-    #   become_user: ubuntu
-    
-    # - name: setup Pm2 startup
-    #   shell: pm2 startup systemd -u ubuntu --hp /home/ubuntu | grep -oP 'sudo \K.*'
-    #   register: om2_startup_cmd
-    #   become_user: ubuntu
-    #   changed_when: false
-    
-    # - name: enable pm2 on boot
-    #   shell: "{{ pm2_startup_cmd.stdout }}"
-    #   when: pm2_startup_cmd.stdout != ""
+   
