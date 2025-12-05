@@ -15,7 +15,7 @@ excercise for end to end automation that deploys, configures and tests an API ho
 - **Ansible ,Terraform , and GCP credentials are installed and configured on local**
 - **Common ssh key**
 
-## Steps To deploy (note to self for local deployment)
+## Steps To deploy locally
 - cd Deployment/test
 - chmod +x bootstrap.sh
 - ./bootstrap.sh

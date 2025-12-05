@@ -133,7 +133,9 @@ jobs:
       - name: Run Ansible Playbook
         if: github.event.inputs.action == 'apply'
         working-directory: ./Deployment/test
-        run: ansible-playbook Ansible/main.yml
+        env:
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+        run: ansible-playbook Ansible/main.yml -e "jwt_secret=$JWT_SECRET"
       
       - name: Get Application URLs
         if: github.event.inputs.action == 'apply'
