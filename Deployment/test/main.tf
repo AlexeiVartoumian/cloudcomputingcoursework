@@ -66,7 +66,7 @@ module "app_firewall" {
   source = "./modules/firewall"
   name = "app-firewall"
   network_name = module.vpc_network.network_name
-  source_ranges = [var.ansible_ip]
+  source_ranges = ["0.0.0.0/0"]
   ports = ["22", "3001"]
   target_tags = ["web-server"]
   
