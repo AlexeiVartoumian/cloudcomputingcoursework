@@ -31,18 +31,18 @@ output "vm_public_ip" {
 }
 
 
-resource "google_compute_firewall" "ssh_allow" {
-    name    = "${var.vm_name}-firewall"
-    network = var.network_name
+# resource "google_compute_firewall" "ssh_allow" {
+#     name    = "${var.vm_name}-firewall"
+#     network = var.network_name
 
-    allow {
-        protocol = "icmp"
-    }
-    allow {
-        protocol = "tcp"
-        ports    = var.ports
-    }
+#     allow {
+#         protocol = "icmp"
+#     }
+#     allow {
+#         protocol = "tcp"
+#         ports    = var.ports
+#     }
 
-    source_ranges = var.source_ranges
-    target_tags   = var.target_tags
-}
+#     source_ranges = var.source_ranges
+#     target_tags   = var.target_tags
+# }

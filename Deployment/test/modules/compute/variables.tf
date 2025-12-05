@@ -18,16 +18,16 @@ variable "ssh_key" {
     type = string
 }
 
-variable "ports" {
-    description = "the ports to be allowed access"
-    type = list(string)
-}
+# variable "ports" {
+#     description = "the ports to be allowed access"
+#     type = list(string)
+# }
 
-variable "source_ranges" {
-    description = "basic config"
-    type = list(string) 
-    default = ["0.0.0.0/0"]
-}
+# variable "source_ranges" {
+#     description = "basic config"
+#     type = list(string) 
+#     default = ["0.0.0.0/0"]
+# }
 variable "target_tags" {
     description = "specify firewall for vm"
     type = list(string)
