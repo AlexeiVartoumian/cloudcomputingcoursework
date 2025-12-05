@@ -1,4 +1,4 @@
 ---
 app_dir: "/home/ubuntu/app"
 docker_image_app: "alexvartoumian/express-app:latest"
-jwt_secret: "secret"
+jwt_secret: ""
