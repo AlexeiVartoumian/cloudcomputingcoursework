@@ -9,7 +9,7 @@ module "db_vm"{
     network_name  = module.vpc_network.network_name  
     vm_name = var.db_name
     ssh_key = var.ssh_key
-    source_ranges = [var.ansible_ip , module.app_vm.vm_ip]
+    source_ranges = [var.ansible_ip , module.app_vm.vm_ip , module.test_suite_vm.vm_ip]
     ports = var.mongo_db_ports
     target_tags = ["db"]
 
