@@ -13,6 +13,8 @@ module "db_vm"{
     ports = var.mongo_db_ports
     target_tags = ["db"]
 
+    depends_on = [module.app_vm, module.test_suite_vm]
+
 }
 
 module "app_vm"{
