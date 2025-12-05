@@ -45,18 +45,6 @@
 - name: reset Ssh connection
   meta: reset_connection
 
-- name: Debug - Show jwt_secret variable
-  debug:
-    msg: 
-      - "jwt_secret is defined: {{ jwt_secret is defined }}"
-      - "jwt_secret value: {{ jwt_secret | default('UNDEFINED') }}"
-      - "jwt_secret length: {{ jwt_secret | length | default(0) }}"
-
-- name: Fail if jwt_secret is empty
-  fail:
-    msg: "jwt_secret is empty or undefined!"
-  when: jwt_secret is undefined or jwt_secret == "" or jwt_secret | length < 5
-
 - name: start docker service
   systemd: 
     name: docker
